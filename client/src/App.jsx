@@ -14,6 +14,9 @@ function App() {
   const [tasks, setTasks] = useState({})
   const [taskInputs, setTaskInputs] = useState({})
 
+  // BACKEND URL
+  const API = "https://life-checklist-backend.onrender.com"
+
   // Check login on refresh
   useEffect(() => {
 
@@ -32,7 +35,7 @@ function App() {
     try {
 
       await axios.post(
-        "https://life-checklist-backend.onrender.com/auth/register",
+        `${API}/auth/register`,
         {
           email,
           password
@@ -56,7 +59,7 @@ function App() {
     try {
 
       const res = await axios.post(
-        "https://life-checklist-backend.onrender.com/auth/login",
+        `${API}/auth/login`,
         {
           email,
           password
@@ -91,57 +94,58 @@ function App() {
   // Fetch categories
   const fetchCategories = async () => {
 
-  const userId = localStorage.getItem("userId")
+    const userId = localStorage.getItem("userId")
 
-  const res = await axios.get(
-    `https://life-checklist-backend.onrender.com/categories?userId=${userId}`
-  )
+    const res = await axios.get(
+      `${API}/categories?userId=${userId}`
+    )
 
-  setCategories(res.data)
+    setCategories(res.data)
 
-  res.data.forEach((category) => {
-    fetchTasks(category._id)
-  })
-}
+    res.data.forEach((category) => {
+      fetchTasks(category._id)
+    })
+  }
 
   // Fetch tasks
   const fetchTasks = async (categoryId) => {
 
-  const userId = localStorage.getItem("userId")
+    const userId = localStorage.getItem("userId")
 
-  const res = await axios.get(
-    `https://life-checklist-backend.onrender.com/tasks/${categoryId}?userId=${userId}`
-  )
+    const res = await axios.get(
+      `${API}/tasks/${categoryId}?userId=${userId}`
+    )
 
-  setTasks(prev => ({
-    ...prev,
-    [categoryId]: res.data
-  }))
-}
+    setTasks(prev => ({
+      ...prev,
+      [categoryId]: res.data
+    }))
+  }
 
   // Add category
   const addCategory = async () => {
 
-  if (!newCategory.trim()) return
+    if (!newCategory.trim()) return
 
-  const userId = localStorage.getItem("userId")
+    const userId = localStorage.getItem("userId")
 
-  await axios.post(
-    "https://life-checklist-backend.onrender.com/categories",
-    {
-      userId,
-      name: newCategory
-    }
-  )
+    await axios.post(
+      `${API}/categories`,
+      {
+        userId,
+        name: newCategory
+      }
+    )
 
-  setNewCategory("")
-  fetchCategories()
-}
+    setNewCategory("")
+    fetchCategories()
+  }
+
   // Delete category
   const deleteCategory = async (categoryId) => {
 
     await axios.delete(
-      `https://life-checklist-backend.onrender.com/categories/${categoryId}`
+      `${API}/categories/${categoryId}`
     )
 
     fetchCategories()
@@ -150,33 +154,34 @@ function App() {
   // Add task
   const addTask = async (categoryId) => {
 
-  const title = taskInputs[categoryId]
+    const title = taskInputs[categoryId]
 
-  if (!title?.trim()) return
+    if (!title?.trim()) return
 
-  const userId = localStorage.getItem("userId")
+    const userId = localStorage.getItem("userId")
 
-  await axios.post(
-    "https://life-checklist-backend.onrender.com/tasks",
-    {
-      userId,
-      categoryId,
-      title
-    }
-  )
+    await axios.post(
+      `${API}/tasks`,
+      {
+        userId,
+        categoryId,
+        title
+      }
+    )
 
-  setTaskInputs(prev => ({
-    ...prev,
-    [categoryId]: ""
-  }))
+    setTaskInputs(prev => ({
+      ...prev,
+      [categoryId]: ""
+    }))
 
-  fetchTasks(categoryId)
-}
+    fetchTasks(categoryId)
+  }
+
   // Toggle task
   const toggleTask = async (taskId, categoryId) => {
 
     await axios.put(
-      `https://life-checklist-backend.onrender.com/tasks/${taskId}`
+      `${API}/tasks/${taskId}`
     )
 
     fetchTasks(categoryId)
@@ -186,7 +191,7 @@ function App() {
   const deleteTask = async (taskId, categoryId) => {
 
     await axios.delete(
-      `https://life-checklist-backend.onrender.com/tasks/${taskId}`
+      `${API}/tasks/${taskId}`
     )
 
     fetchTasks(categoryId)
@@ -196,11 +201,11 @@ function App() {
   if (!isLoggedIn) {
 
     return (
-      <div className="min-h-screen bg-zinc-900 flex items-center justify-center text-white">
+      <div className="min-h-screen bg-zinc-900 flex items-center justify-center text-white p-4">
 
-        <div className="bg-zinc-800 p-10 rounded-2xl w-96">
+        <div className="bg-zinc-800 p-6 sm:p-10 rounded-2xl w-full max-w-md">
 
-          <h1 className="text-4xl font-bold mb-8 text-center">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center">
             Life Checklist
           </h1>
 
@@ -208,6 +213,7 @@ function App() {
 
             <input
               type="email"
+              autoComplete="off"
               placeholder="Email"
               className="bg-zinc-700 px-4 py-3 rounded-lg outline-none"
               value={email}
@@ -216,6 +222,7 @@ function App() {
 
             <input
               type="password"
+              autoComplete="off"
               placeholder="Password"
               className="bg-zinc-700 px-4 py-3 rounded-lg outline-none"
               value={password}
@@ -246,12 +253,12 @@ function App() {
 
   // MAIN APP
   return (
-    <div className="min-h-screen bg-zinc-900 text-white p-10">
+    <div className="min-h-screen bg-zinc-900 text-white p-4 sm:p-6 md:p-10">
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between mb-10">
 
-        <h1 className="text-5xl font-bold">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
           Life Checklist
         </h1>
 
@@ -265,12 +272,12 @@ function App() {
       </div>
 
       {/* Add Category */}
-      <div className="flex gap-4 mb-10">
+      <div className="flex flex-col sm:flex-row gap-4 mb-10">
 
         <input
           type="text"
           placeholder="New category"
-          className="bg-zinc-800 px-4 py-3 rounded-lg outline-none w-80"
+          className="bg-zinc-800 px-4 py-3 rounded-lg outline-none w-full sm:w-80"
           value={newCategory}
           onChange={(e) => setNewCategory(e.target.value)}
         />
@@ -285,7 +292,7 @@ function App() {
       </div>
 
       {/* Categories */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 
         {categories.map((category) => {
 
@@ -311,13 +318,13 @@ function App() {
 
             <div
               key={category._id}
-              className="bg-zinc-800 p-6 rounded-2xl shadow-lg"
+              className="bg-zinc-800 p-4 sm:p-6 rounded-2xl shadow-lg"
             >
 
               {/* Category Header */}
               <div className="flex items-center justify-between mb-4">
 
-                <h2 className="text-2xl font-bold capitalize">
+                <h2 className="text-xl sm:text-2xl font-bold capitalize">
                   {category.name}
                 </h2>
 
@@ -412,14 +419,14 @@ function App() {
                       className="w-4 h-4"
                     />
 
-                    <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center justify-between w-full gap-2">
 
                       <p
-                        className={
+                        className={`break-words ${
                           task.completed
                             ? "line-through text-gray-400"
                             : ""
-                        }
+                        }`}
                       >
                         {task.title}
                       </p>
