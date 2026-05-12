@@ -32,7 +32,7 @@ function App() {
     try {
 
       await axios.post(
-        "http://localhost:5000/auth/register",
+        "https://life-checklist-backend.onrender.com/auth/register",
         {
           email,
           password
@@ -56,7 +56,7 @@ function App() {
     try {
 
       const res = await axios.post(
-        "http://localhost:5000/auth/login",
+        "https://life-checklist-backend.onrender.com/auth/login",
         {
           email,
           password
@@ -94,7 +94,7 @@ function App() {
   const userId = localStorage.getItem("userId")
 
   const res = await axios.get(
-    `http://localhost:5000/categories?userId=${userId}`
+    `https://life-checklist-backend.onrender.com/categories?userId=${userId}`
   )
 
   setCategories(res.data)
@@ -110,7 +110,7 @@ function App() {
   const userId = localStorage.getItem("userId")
 
   const res = await axios.get(
-    `http://localhost:5000/tasks/${categoryId}?userId=${userId}`
+    `https://life-checklist-backend.onrender.com/tasks/${categoryId}?userId=${userId}`
   )
 
   setTasks(prev => ({
@@ -127,7 +127,7 @@ function App() {
   const userId = localStorage.getItem("userId")
 
   await axios.post(
-    "http://localhost:5000/categories",
+    "https://life-checklist-backend.onrender.com/categories",
     {
       userId,
       name: newCategory
@@ -141,7 +141,7 @@ function App() {
   const deleteCategory = async (categoryId) => {
 
     await axios.delete(
-      `http://localhost:5000/categories/${categoryId}`
+      `https://life-checklist-backend.onrender.com/categories/${categoryId}`
     )
 
     fetchCategories()
@@ -157,7 +157,7 @@ function App() {
   const userId = localStorage.getItem("userId")
 
   await axios.post(
-    "http://localhost:5000/tasks",
+    "https://life-checklist-backend.onrender.com/tasks",
     {
       userId,
       categoryId,
@@ -176,7 +176,7 @@ function App() {
   const toggleTask = async (taskId, categoryId) => {
 
     await axios.put(
-      `http://localhost:5000/tasks/${taskId}`
+      `https://life-checklist-backend.onrender.com/tasks/${taskId}`
     )
 
     fetchTasks(categoryId)
@@ -186,7 +186,7 @@ function App() {
   const deleteTask = async (taskId, categoryId) => {
 
     await axios.delete(
-      `http://localhost:5000/tasks/${taskId}`
+      `https://life-checklist-backend.onrender.com/tasks/${taskId}`
     )
 
     fetchTasks(categoryId)
