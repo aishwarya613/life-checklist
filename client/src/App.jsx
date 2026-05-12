@@ -422,7 +422,7 @@ function App() {
                     <div className="flex items-center justify-between w-full gap-2">
 
                       <p
-                        className={`break-words ${
+                        className={`wrap-break-word ${
                           task.completed
                             ? "line-through text-gray-400"
                             : ""
